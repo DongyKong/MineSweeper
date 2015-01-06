@@ -46,8 +46,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Standard Assets\Scripts\Crosshair.cs" />
      <Compile Include="Assets\Standard Assets\Scripts\Gun.cs" />
+     <Compile Include="Assets\Standard Assets\Scripts\MineBox.cs" />
      <Compile Include="Assets\Standard Assets\Scripts\MineManager.cs" />
+     <Compile Include="Assets\Standard Assets\Scripts\OutOfBounds.cs" />
      <Compile Include="Assets\Standard Assets\Scripts\Player.cs" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Background.shader" />

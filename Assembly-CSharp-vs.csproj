@@ -46,7 +46,16 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\OutOfBounds.cs" />
+     <Compile Include="Assets\Done\Done_Scripts\Done_BGScroller.cs" />
+     <Compile Include="Assets\Done\Done_Scripts\Done_DestroyByBoundary.cs" />
+     <Compile Include="Assets\Done\Done_Scripts\Done_DestroyByContact.cs" />
+     <Compile Include="Assets\Done\Done_Scripts\Done_DestroyByTime.cs" />
+     <Compile Include="Assets\Done\Done_Scripts\Done_EvasiveManeuver.cs" />
+     <Compile Include="Assets\Done\Done_Scripts\Done_GameController.cs" />
+     <Compile Include="Assets\Done\Done_Scripts\Done_Mover.cs" />
+     <Compile Include="Assets\Done\Done_Scripts\Done_PlayerController.cs" />
+     <Compile Include="Assets\Done\Done_Scripts\Done_RandomRotator.cs" />
+     <Compile Include="Assets\Done\Done_Scripts\Done_WeaponController.cs" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Background.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Transparent Vertex Color.shader" />

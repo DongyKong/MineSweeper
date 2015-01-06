@@ -8,7 +8,7 @@ public class Player : MonoBehaviour {
 	
 	public float upDownRange;
 	float vertRote = 0.0f;
-	float horizRote = 180.0f;
+	float horizRote = 0.0f;
 	
 	void Start() {
 		Screen.lockCursor = true;

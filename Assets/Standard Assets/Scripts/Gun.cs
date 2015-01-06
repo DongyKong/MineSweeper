@@ -7,25 +7,21 @@ public class Gun : MonoBehaviour {
 	public GameObject clearShot;
 	public GameObject flagShot;
 
+	public float range;
 	public float bulletImpulse;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
 	// Update is called once per frame
 	void Update () {
-		//	Destroy mine box
-		if (Input.GetButtonDown ("Fire1")) {
-			GameObject bullet = Instantiate(clearShot, shotSpawn.position, shotSpawn.rotation) as GameObject;
-			bullet.rigidbody.AddForce(shotSpawn.transform.forward * bulletImpulse, ForceMode.Impulse);
-		}
+		//	Shooting
+		GameObject currShot = null;
+		if (Input.GetButtonDown ("Fire1"))
+			currShot = clearShot;
+		else if(Input.GetButtonDown("Fire2"))
+			currShot = flagShot;
 
-		//	Flag mine box
-		if(Input.GetButtonDown ("Fire2")) {
-			GameObject bullet = Instantiate(flagShot, shotSpawn.position, shotSpawn.rotation) as GameObject;
-			bullet.rigidbody.AddForce(shotSpawn.transform.forward * bulletImpulse, ForceMode.Impulse);
+		if (currShot != null) {
+			GameObject bullet = Instantiate (currShot, shotSpawn.position, shotSpawn.rotation) as GameObject;
+			bullet.rigidbody.AddForce (shotSpawn.transform.forward * bulletImpulse, ForceMode.Impulse);
 		}
 	}
 }
