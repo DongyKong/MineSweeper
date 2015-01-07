@@ -18,13 +18,21 @@ public class MineManager : MonoBehaviour {
 	bool bRestart = false;
 	bool bWin = false;
 
-	public bool startAssist = false;
-	public int startAssistNumReveal = 2;
+	public bool startAssist;
+	public int startAssistNumReveal;
 
 	public int remainingMines;
 		
 	// Use this for initialization
 	void Start () {
+
+		//	Pull info from Preferences
+		numBoxes = Preferences.numBoxes;
+		distanceBetweenBoxes = Preferences.distanceBetweenBoxes;
+		fractionMines = Preferences.fractionMines;
+		startAssist = Preferences.startAssist;
+		startAssistNumReveal = Preferences.startAssistNumReveal;
+
 		//	Generate mines
 		int numPerRow = (int)Mathf.Sqrt (numBoxes);
 		allBoxes = new GameObject[numPerRow, numPerRow];
@@ -93,6 +101,12 @@ public class MineManager : MonoBehaviour {
 			bWin = true;
 			restartText.text = "Press 'R' to Restart";
 			bRestart = true;
+		}
+
+		//	Check for player pressing 'Z'
+		if(Input.GetKeyDown(KeyCode.Z)) {
+			Screen.lockCursor = false;
+			Application.LoadLevel("MainMenu");
 		}
 	}
 

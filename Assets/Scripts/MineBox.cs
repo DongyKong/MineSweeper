@@ -57,6 +57,7 @@ public class MineBox : MonoBehaviour {
 				}
 				else if(tag != "Cleared") {
 					clearBox(true);
+					Destroy (other.gameObject);
 				}
 			}
 			else if(other.tag == "FlagBullet" && tag != "Cleared") {
