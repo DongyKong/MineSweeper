@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
 public class MineBox : MonoBehaviour {
 
 	public GameObject textMesh;
@@ -9,7 +10,11 @@ public class MineBox : MonoBehaviour {
 	public GameObject standardSplode;
 	public GameObject gameOverSplode;
 	public GameObject fireEffect;
-	private GameObject myFireEffect;
+	public GameObject myFireEffect;
+
+	public AudioClip clearSplodeFX;
+	public AudioClip loseSplodeFX;
+	public AudioClip fireSplodeFX;
 
 	public bool isMine = false;
 	private MineManager manager;
@@ -27,11 +32,12 @@ public class MineBox : MonoBehaviour {
 		                              rigidbody.transform.rotation) as GameObject;
 
 		myTextMesh = text.GetComponent<TextMesh>();
-		renderer.material.color = Color.gray;
 	}
 
 	public void gameOver() {
 		Instantiate(gameOverSplode, transform.position, transform.rotation);
+		audio.volume = 1.0f;
+		AudioSource.PlayClipAtPoint(loseSplodeFX, transform.position);
 		myTextMesh.text = "";
 		Destroy (this.gameObject);
 		Destroy (myFireEffect);
@@ -40,7 +46,10 @@ public class MineBox : MonoBehaviour {
 	//	Process getting shot by a bullet
 	void OnTriggerEnter(Collider other) {
 		if(other.tag != "OutOfBounds" && other.tag != "Player") {
-			if(other.tag == "ClearBullet") {
+			if(other.tag == "ClearBullet" && renderer.material.color != Color.red) {
+				//	Put out the fire
+				Destroy (myFireEffect);
+
 				if(isMine) {
 					//	YOU LOSE
 					gameOver();
@@ -50,12 +59,16 @@ public class MineBox : MonoBehaviour {
 					clearBox(true);
 				}
 			}
-			else if(other.tag == "FlagBullet") {
-				if(renderer.material.color == Color.gray) {
+			else if(other.tag == "FlagBullet" && tag != "Cleared") {
+				if(renderer.material.color == Color.gray || renderer.material.color == Color.green) {
 					if(myTextMesh.text != "?") {
 						//	Set fire (flagged as having mine)
 						myFireEffect = Instantiate(fireEffect, transform.position, transform.rotation) as GameObject;
 						renderer.material.color = Color.red;
+
+						//	Update remaining mines
+						manager.remainingMines--;
+						manager.mineText.text = "Remaining mines: " + manager.remainingMines;
 					}
 					else {
 						//	Return to unmarked and unflagged
@@ -70,7 +83,13 @@ public class MineBox : MonoBehaviour {
 
 					//	Mark with question mark
 					myTextMesh.text = "?";
+
+					//	Update remaining mines
+					manager.remainingMines++;
+					manager.mineText.text = "Remaining mines: " + manager.remainingMines;
 				}
+				audio.volume = 0.3f;
+				audio.PlayOneShot(fireSplodeFX);
 			}
 
 			if(tag != "Cleared")
@@ -79,9 +98,14 @@ public class MineBox : MonoBehaviour {
 	}
 
 	//	Clear the box
-	public void clearBox(bool recurse) {	//	recurse = 'false' avoids infinite recursion with chainClear()
+	//		recurse = 'false' avoids infinite recursion with chainClear()
+	public void clearBox(bool recurse) {
+		Destroy(myFireEffect);
+
 		//	Blow up the box and reveal num nearby mines
 		Instantiate(standardSplode, transform.position, transform.rotation);
+		audio.volume = 0.2f;
+		audio.PlayOneShot(clearSplodeFX);
 		
 		int near = manager.getNearbyMines (this.gameObject);
 
@@ -95,6 +119,7 @@ public class MineBox : MonoBehaviour {
 		
 		//	Set tag so bullets won't hit it
 		tag = "Cleared";
+		collider.enabled = false;
 	}
 
 	//	Display number on box and remove the box

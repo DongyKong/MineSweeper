@@ -22,6 +22,7 @@ public class Gun : MonoBehaviour {
 		if (currShot != null) {
 			GameObject bullet = Instantiate (currShot, shotSpawn.position, shotSpawn.rotation) as GameObject;
 			bullet.rigidbody.AddForce (shotSpawn.transform.forward * bulletImpulse, ForceMode.Impulse);
+			audio.Play();
 		}
 	}
 }

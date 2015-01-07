@@ -14,10 +14,15 @@ public class MineManager : MonoBehaviour {
 	public Text mineText;
 	public Text restartText;
 	public Text gameOverText;
+	public Text winText;
 	bool bRestart = false;
+	bool bWin = false;
 
-	int remainingMines;
+	public bool startAssist = false;
+	public int startAssistNumReveal = 2;
 
+	public int remainingMines;
+		
 	// Use this for initialization
 	void Start () {
 		//	Generate mines
@@ -31,11 +36,11 @@ public class MineManager : MonoBehaviour {
 			for(int j = 0; j < numPerRow; j++) {
 				Quaternion rote = Quaternion.identity;
 				GameObject box = Instantiate(boxToSpawn, locToSpawn, rote) as GameObject;
+				box.renderer.material.color = Color.gray;
 
 				//	Decide if box has a mine
 				if(Random.Range(0, 100) < (fractionMines*100)) {
 					box.GetComponent<MineBox>().isMine = true;
-//					box.GetComponent<MineBox>().renderer.material.color = Color.red;
 					remainingMines++;
 				}
 
@@ -48,12 +53,46 @@ public class MineManager : MonoBehaviour {
 		}
 
 		mineText.text = "Remaining mines: " + remainingMines;
+
+		//	Reveal 0 boxes if startAssist is on
+		if (startAssist) {
+			int numRevealed = 0;
+			for (int i = 0; i < numPerRow; i++) {
+				for (int j = 0; j < numPerRow; j++) {
+					if (getNearbyMines(allBoxes[i, j]) == 0 && numRevealed < startAssistNumReveal &&
+					    	!allBoxes[i, j].GetComponent<MineBox>().isMine) {
+
+						allBoxes [i, j].renderer.material.color = Color.green;
+						numRevealed++;
+					}
+				}
+			}
+		}
 	}
 
 	//	Check for restarting the game
 	void Update() {
 		if (bRestart && Input.GetKeyDown(KeyCode.R)) {
 			Application.LoadLevel(Application.loadedLevel);
+		}
+
+		//	Check win condition
+		bool win = true;
+		for (int i = 0; i < allBoxes.GetLength(0); i++) {
+			for(int j = 0; j < allBoxes.GetLength(1); j++) {
+				if(allBoxes[i, j] != null) {
+					MineBox script = allBoxes[i, j].GetComponent<MineBox>();
+					if(script.isMine && script.myFireEffect == null)
+						win = false;
+				}
+			}
+		}
+
+		if (win && gameOverText.text != "GAME OVER") {
+			winText.text = "YOU WIN!";
+			bWin = true;
+			restartText.text = "Press 'R' to Restart";
+			bRestart = true;
 		}
 	}
 
@@ -76,8 +115,10 @@ public class MineManager : MonoBehaviour {
 
 	//	Initiate game over
 	public void gameOver() {
-		gameOverText.text = "GAME OVER";
-		StartCoroutine (blowUpEverything ());
+		if(!bWin) {
+			gameOverText.text = "GAME OVER";
+			StartCoroutine (blowUpEverything ());
+		}
 	}
 
 	//	Game over, blow up everything
