@@ -14,4 +14,8 @@ public class MainMenu : MonoBehaviour {
 	public void OnClickQuit() {
 		Application.Quit();
 	}
+
+	public void OnClickControls() {
+		Application.LoadLevel("ControlsMenu");
+	}
 }

@@ -11,6 +11,7 @@ public class OptionsMenu : MonoBehaviour {
 
 	private GameObject[] slidersAndToggle;
 	private GameObject[] texts;
+	private GameObject[] textOutlines;
 
 	public void OnClickBack() {
 		Application.LoadLevel("MainMenu");
@@ -20,6 +21,7 @@ public class OptionsMenu : MonoBehaviour {
 
 		slidersAndToggle = new GameObject[5];
 		texts = new GameObject[5];
+		textOutlines = new GameObject[5];
 
 		int yCoord = 100;
 		int sliderDecrement = 100;
@@ -46,7 +48,13 @@ public class OptionsMenu : MonoBehaviour {
 
 			yCoord += textDecrement;
 
-			//	Instantiate its text label
+			//	Instantiate its text label and outline
+			obj = Instantiate(textFieldPrefab) as GameObject;
+			obj.transform.SetParent(menuPanel, false);
+			obj.GetComponent<Text>().text = "";
+			myTransform = obj.GetComponent<RectTransform>();
+			myTransform.anchoredPosition = new Vector2(screenWidth/2, yCoord);
+			texts[i] = obj;
 			obj = Instantiate(textFieldPrefab) as GameObject;
 			obj.transform.SetParent(menuPanel, false);
 			obj.GetComponent<Text>().text = "";

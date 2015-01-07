@@ -15,8 +15,9 @@ public class MineManager : MonoBehaviour {
 	public Text restartText;
 	public Text gameOverText;
 	public Text winText;
-	bool bRestart = false;
-	bool bWin = false;
+	private bool bRestart = false;
+	private bool bGameOver = false;
+	private bool bWin = false;
 
 	public bool startAssist;
 	public int startAssistNumReveal;
@@ -129,8 +130,9 @@ public class MineManager : MonoBehaviour {
 
 	//	Initiate game over
 	public void gameOver() {
-		if(!bWin) {
+		if(!bWin && !bGameOver) {
 			gameOverText.text = "GAME OVER";
+			bGameOver = true;
 			StartCoroutine (blowUpEverything ());
 		}
 	}
