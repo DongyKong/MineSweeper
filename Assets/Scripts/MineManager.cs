@@ -140,19 +140,45 @@ public class MineManager : MonoBehaviour {
 	//	Game over, blow up everything
 	IEnumerator blowUpEverything() {
 
+		ArrayList toBlowUp = new ArrayList();
+
 		for(int i = 0; i < allBoxes.GetLength(0); i++) {
 			for(int j = 0; j < allBoxes.GetLength(1); j++) {
-				if(allBoxes[i, j] != null) {
-					allBoxes[i, j].GetComponent<MineBox>().gameOver();
-					yield return new WaitForSeconds(0.05f);
-				}
+				toBlowUp.Add(allBoxes[i, j]);
 			}
+		}
 
-			if(i == (int)allBoxes.GetLength(0)/4) {
+		//	Generate random indices until list is empty
+		int initCount = toBlowUp.Count;
+		while(toBlowUp.Count > 0) {
+			int rand = Random.Range(0, toBlowUp.Count - 1);
+			GameObject box = (GameObject)toBlowUp[rand];
+			if(box != null)
+				box.GetComponent<MineBox>().gameOver();
+			toBlowUp.RemoveAt(rand);
+
+			yield return new WaitForSeconds(0.02f);
+
+			//	Display 'R' after 10% boxes gone
+			if(toBlowUp.Count == (int)(initCount*0.9)) {
 				restartText.text = "Press 'R' to Restart";
 				bRestart = true;
 			}
 		}
+
+//		for(int i = 0; i < allBoxes.GetLength(0); i++) {
+//			for(int j = 0; j < allBoxes.GetLength(1); j++) {
+//				if(allBoxes[i, j] != null) {
+//					allBoxes[i, j].GetComponent<MineBox>().gameOver();
+//					yield return new WaitForSeconds(0.05f);
+//				}
+//			}
+//
+//			if(i == (int)allBoxes.GetLength(0)/4) {
+//				restartText.text = "Press 'R' to Restart";
+//				bRestart = true;
+//			}
+//		}
 	}
 
 	//	Get number of neighboring boxes with mines

@@ -11,7 +11,6 @@ public class OptionsMenu : MonoBehaviour {
 
 	private GameObject[] slidersAndToggle;
 	private GameObject[] texts;
-	private GameObject[] textOutlines;
 
 	public void OnClickBack() {
 		Application.LoadLevel("MainMenu");
@@ -21,7 +20,6 @@ public class OptionsMenu : MonoBehaviour {
 
 		slidersAndToggle = new GameObject[5];
 		texts = new GameObject[5];
-		textOutlines = new GameObject[5];
 
 		int yCoord = 100;
 		int sliderDecrement = 100;
