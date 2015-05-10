@@ -10,6 +10,7 @@ public class MineBox : MonoBehaviour {
 	public GameObject standardSplode;
 	public GameObject gameOverSplode;
 	public GameObject fireEffect;
+	[HideInInspector]
 	public GameObject myFireEffect;
 
 	public AudioClip clearSplodeFX;
@@ -17,6 +18,7 @@ public class MineBox : MonoBehaviour {
 	public AudioClip fireSplodeFX;
 
 	public bool isMine = false;
+	public bool cleared = false;
 	private MineManager manager;
 
 	void Start() {
@@ -44,9 +46,9 @@ public class MineBox : MonoBehaviour {
 	}
 
 	//	Process getting shot by a bullet
-	void OnTriggerEnter(Collider other) {
-		if(other.tag != "OutOfBounds" && other.tag != "Player") {
-			if(other.tag == "ClearBullet" && renderer.material.color != Color.red) {
+	public void hitByShot(BaseShot.SHOT_TYPE type) {
+		if(type == BaseShot.SHOT_TYPE.CLEAR) {
+			if(renderer.material.color != Color.red) {
 				//	Put out the fire
 				Destroy (myFireEffect);
 
@@ -55,46 +57,41 @@ public class MineBox : MonoBehaviour {
 					gameOver();
 					manager.gameOver();
 				}
-				else if(tag != "Cleared") {
+				else if(!cleared)
 					clearBox(true);
-					Destroy (other.gameObject);
-				}
 			}
-			else if(other.tag == "FlagBullet" && tag != "Cleared") {
-				if(renderer.material.color == Color.gray || renderer.material.color == Color.green) {
-					if(myTextMesh.text != "?") {
-						//	Set fire (flagged as having mine)
-						myFireEffect = Instantiate(fireEffect, transform.position, transform.rotation) as GameObject;
-						renderer.material.color = Color.red;
-
-						//	Update remaining mines
-						manager.remainingMines--;
-						manager.mineText.text = "Remaining mines: " + manager.remainingMines;
-					}
-					else {
-						//	Return to unmarked and unflagged
-						myTextMesh.text = "";
-					}
-				}
-				else {
-					//	Remove flame and change back to gray
-					renderer.material.color = Color.gray;
-					if(myFireEffect != null)
-						Destroy(myFireEffect);
-
-					//	Mark with question mark
-					myTextMesh.text = "?";
+		}
+		else if(type == BaseShot.SHOT_TYPE.FLAG && !cleared) {
+			if(renderer.material.color == Color.gray || renderer.material.color == Color.green) {
+				if(myTextMesh.text != "?") {
+					//	Set fire (flagged as having mine)
+					myFireEffect = Instantiate(fireEffect, transform.position, transform.rotation) as GameObject;
+					renderer.material.color = Color.red;
 
 					//	Update remaining mines
-					manager.remainingMines++;
+					manager.remainingMines--;
 					manager.mineText.text = "Remaining mines: " + manager.remainingMines;
 				}
-				audio.volume = 0.3f;
-				audio.PlayOneShot(fireSplodeFX);
+				else {
+					//	Return to unmarked and unflagged
+					myTextMesh.text = "";
+				}
 			}
+			else {
+				//	Remove flame and change back to gray
+				renderer.material.color = Color.gray;
+				if(myFireEffect != null)
+					Destroy(myFireEffect);
 
-			if(tag != "Cleared")
-				Destroy (other.gameObject);
+				//	Mark with question mark
+				myTextMesh.text = "?";
+
+				//	Update remaining mines
+				manager.remainingMines++;
+				manager.mineText.text = "Remaining mines: " + manager.remainingMines;
+			}
+			audio.volume = 0.3f;
+			audio.PlayOneShot(fireSplodeFX);
 		}
 	}
 
@@ -107,19 +104,17 @@ public class MineBox : MonoBehaviour {
 		Instantiate(standardSplode, transform.position, transform.rotation);
 		audio.volume = 0.2f;
 		audio.PlayOneShot(clearSplodeFX);
-		
-		int near = manager.getNearbyMines (this.gameObject);
 
+		int near = manager.getNearbyMines (this.gameObject);
 		if (near == 0) {
 			if (recurse)
 				manager.chainClear (this.gameObject);
 		}
 		else
 			displayText(near.ToString());
-		renderer.enabled = false;
 		
-		//	Set tag so bullets won't hit it
-		tag = "Cleared";
+		cleared = true;
+		renderer.enabled = false;
 		collider.enabled = false;
 	}
 

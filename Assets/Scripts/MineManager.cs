@@ -15,9 +15,15 @@ public class MineManager : MonoBehaviour {
 	public Text restartText;
 	public Text gameOverText;
 	public Text winText;
-	private bool bRestart = false;
-	private bool bGameOver = false;
-	private bool bWin = false;
+
+	[HideInInspector]
+	public bool bRestart = false;
+	[HideInInspector]
+	public bool bGameOver = false;
+	[HideInInspector]
+	public bool bWin = false;
+
+	private Bounds mineBoundingBox;
 
 	public bool startAssist;
 	public int startAssistNumReveal;
@@ -26,6 +32,7 @@ public class MineManager : MonoBehaviour {
 		
 	// Use this for initialization
 	void Start () {
+		mineText.text = restartText.text = gameOverText.text = winText.text = "";
 
 		//	Pull info from Preferences
 		numBoxes = Preferences.numBoxes;
@@ -157,7 +164,8 @@ public class MineManager : MonoBehaviour {
 				box.GetComponent<MineBox>().gameOver();
 			toBlowUp.RemoveAt(rand);
 
-			yield return new WaitForSeconds(0.02f);
+			float time = Random.Range(0f, 0.3f);
+			yield return new WaitForSeconds(time);
 
 			//	Display 'R' after 10% boxes gone
 			if(toBlowUp.Count == (int)(initCount*0.9)) {
@@ -165,20 +173,6 @@ public class MineManager : MonoBehaviour {
 				bRestart = true;
 			}
 		}
-
-//		for(int i = 0; i < allBoxes.GetLength(0); i++) {
-//			for(int j = 0; j < allBoxes.GetLength(1); j++) {
-//				if(allBoxes[i, j] != null) {
-//					allBoxes[i, j].GetComponent<MineBox>().gameOver();
-//					yield return new WaitForSeconds(0.05f);
-//				}
-//			}
-//
-//			if(i == (int)allBoxes.GetLength(0)/4) {
-//				restartText.text = "Press 'R' to Restart";
-//				bRestart = true;
-//			}
-//		}
 	}
 
 	//	Get number of neighboring boxes with mines
@@ -194,6 +188,21 @@ public class MineManager : MonoBehaviour {
 		}
 
 		return nearbyMines;
+	}
+
+	//	Return all mine boxes in a 1D array
+	public GameObject[] getAllMines() {
+		GameObject[] mines = new GameObject[allBoxes.Length];
+
+		int index = 0;
+		for(int i = 0; i < allBoxes.GetLength(0); ++i) {
+			for(int j = 0; j < allBoxes.GetLength(1); ++j) {
+				mines[index] = allBoxes[i, j];
+				++index;
+			}
+		}
+
+		return mines;
 	}
 
 	//	Return all valid neighbors of a box
@@ -212,7 +221,7 @@ public class MineManager : MonoBehaviour {
 							if(a >= 0 && b >= 0 && a < allBoxes.GetLength(0) && b < allBoxes.GetLength(0)
 							   && (a != i || b != j)) {
 								
-								if(allBoxes[a, b] != null && allBoxes[a, b].GetComponent<MineBox>().tag != "Cleared")
+								if(allBoxes[a, b] != null && !allBoxes[a, b].GetComponent<MineBox>().cleared)
 									neighbors.Add(allBoxes[a, b]);
 							}
 							b++;

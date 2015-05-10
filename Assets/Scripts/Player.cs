@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Player : MonoBehaviour {
+
+	public float health;
 
 	public float moveSpeed;
 	public float mouseSensitivity;
@@ -15,10 +18,8 @@ public class Player : MonoBehaviour {
 	}
 	
 	void Update() {
-		
 		//	Left/Right rotation
 		horizRote += Input.GetAxis ("Mouse X") * mouseSensitivity;
-		//transform.Rotate (0.0f, roteLeftRight, 0.0f);
 		
 		//	Up/Down rotation
 		vertRote -= Input.GetAxis ("Mouse Y") * mouseSensitivity;
@@ -33,9 +34,7 @@ public class Player : MonoBehaviour {
 		CharacterController cc = GetComponent<CharacterController> ();
 		
 		Vector3 speed = new Vector3 (sideSpeed * moveSpeed, riseSpeed * moveSpeed, forwardSpeed * moveSpeed);
-		
 		speed = transform.rotation * speed;
-		
 		cc.Move (speed * Time.deltaTime);
 		
 	}

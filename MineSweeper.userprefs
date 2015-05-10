@@ -1,13 +1,13 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Preferences.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Gun.cs">
     <Files>
-      <File FileName="Assets\Scripts\MineManager.cs" Line="20" Column="28" />
-      <File FileName="Assets\ControlsMenu.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\OptionsMenu.cs" Line="72" Column="27" />
-      <File FileName="Assets\Scripts\Preferences.cs" Line="11" Column="2" />
+      <File FileName="Assets\Scripts\MineBox.cs" Line="84" Column="28" />
       <File FileName="Assets\Scripts\Player.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\MineBox.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Gun.cs" Line="24" Column="78" />
+      <File FileName="Assets\Scripts\EnemyScript.cs" Line="71" Column="59" />
+      <File FileName="Assets\Scripts\MineManager.cs" Line="164" Column="16" />
+      <File FileName="Assets\Scripts\BaseShot.cs" Line="16" Column="32" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

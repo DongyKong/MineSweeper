@@ -7,7 +7,6 @@ public class Gun : MonoBehaviour {
 	public GameObject clearShot;
 	public GameObject flagShot;
 
-	public float range;
 	public float bulletImpulse;
 
 	// Update is called once per frame
@@ -21,6 +20,8 @@ public class Gun : MonoBehaviour {
 
 		if (currShot != null) {
 			GameObject bullet = Instantiate (currShot, shotSpawn.position, shotSpawn.rotation) as GameObject;
+
+			bullet.GetComponent<BaseShot>().parent = this.transform.parent.gameObject;
 			bullet.rigidbody.AddForce (shotSpawn.transform.forward * bulletImpulse, ForceMode.Impulse);
 			audio.Play();
 		}
